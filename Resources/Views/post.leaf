@@ -1,0 +1,7 @@
+<html>
+      <ul>
+        <h5>#(post.id)</h5>
+        <h5>#(post.title)</h5>
+        <h5>#(post.body)</h5>
+      </ul>
+</html>

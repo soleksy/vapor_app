@@ -1,0 +1,6 @@
+<html>
+      <ul>
+        <h5>#(user.id)</h5>
+        <h5>#(user.name)</h5>
+      </ul>
+</html>

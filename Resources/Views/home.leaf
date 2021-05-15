@@ -1,0 +1,23 @@
+<html>
+      <ul>
+        <h1> HOME PAGE </h1>
+        <br/>
+        <form action ="/users" method="GET">
+          <button> Users </button>
+        </form>
+
+         <form action ="/posts" method="GET">
+          <button> Posts </button>
+        </form>
+
+         <form action ="/comments" method="GET">
+          <button> Comments </button>
+        </form>
+
+        <form action ="/users/post" method="POST">
+        <input = type="text" name = "name" />
+          <button> Add User </button>
+        </form>
+
+      </ul>
+</html>

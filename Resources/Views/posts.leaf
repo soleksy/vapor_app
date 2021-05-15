@@ -1,0 +1,21 @@
+<html>
+   <ul>
+         #for(post in PostList):
+         <div>
+          TITLE : #(post.title)
+         </div>
+          BY USER: #(post.user.id)
+          POST ID: #(post.id)
+         <div>
+         BODY : #(post.body)
+         </div>
+        </br>
+        </br> 
+         #endfor
+
+      <form action ="/" method="GET">
+              <button> BACK </button>
+      </form> 
+
+   </ul>
+</html>
