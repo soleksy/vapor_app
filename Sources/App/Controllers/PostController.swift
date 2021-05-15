@@ -1,12 +1,14 @@
 import Vapor
 import Fluent
 
-struct PostList: Content {
-    let PostList: [Post]
+let postRedirect = "/posts"
+
+struct postList: Content {
+    let postList: [Post]
 }
 
 
-struct UpdatePost: Content {
+struct updatePost: Content {
     let id: UUID?
     let title: String
     let body: String
@@ -20,26 +22,26 @@ struct PostController: RouteCollection {
     let posts = routes.grouped("posts")
 
     posts.group(":postId"){ post in 
-            post.get(use: get_post)
+            post.get(use: getPost)
             post.delete(use: delete)
         }
         
-    posts.get(use: get_all_posts)
+    posts.get(use: getAllPosts)
     posts.put(use: update)
     posts.post(use: create)
 
     }
 
 
-    func get_all_posts(req: Request) throws -> EventLoopFuture<View> {
+    func getAllPosts(req: Request) throws -> EventLoopFuture<View> {
         let posts = Post.query(on: req.db).all()
         return posts.flatMap { list in 
-            let data = PostList(PostList: list)
+            let data = postList(postList: list)
             return req.view.render("posts" , data)
         }
     }
 
-    func get_post(req: Request) throws -> EventLoopFuture<View> {
+    func getPost(req: Request) throws -> EventLoopFuture<View> {
 
         guard let postId = req.parameters.get("postId") as UUID? else{
             throw Abort(.badRequest)
@@ -54,20 +56,20 @@ struct PostController: RouteCollection {
     func create(req: Request) throws -> EventLoopFuture<Response> {
         let post = try req.content.decode(Post.self)
         return post.create(on: req.db).map { _ in 
-            return req.redirect(to: "/posts")
+            return req.redirect(to: postRedirect)
         }
     }
 
 
     func update(req: Request) throws -> EventLoopFuture<Response> {
-        let post = try req.content.decode(UpdatePost.self)
+        let post = try req.content.decode(updatePost.self)
         return Post.find(post.id, on: req.db)
         .unwrap(or: Abort(.notFound))
         .flatMap{
             $0.title = post.title
             $0.body = post.body
             return $0.update(on: req.db).map { _ in 
-                return req.redirect(to: "/posts")
+                return req.redirect(to: postRedirect)
                 }
         }
     }
@@ -77,7 +79,7 @@ struct PostController: RouteCollection {
         .unwrap(or: Abort(.notFound))
         .flatMap{
             $0.delete(on: req.db).map {_ in 
-                return req.redirect(to: "/posts")
+                return req.redirect(to: postRedirect)
             }
         }
     }

@@ -22,7 +22,9 @@ final class Post: Model , Content {
     @Children(for: \.$post)
     var comments: [Comment]
 
-    init(){}
+    init(){
+        // Intentionally unimplemented...
+    }
 
 
     init(id: UUID? = nil, title: String , body: String, userId: UUID){

@@ -19,7 +19,9 @@ final class Comment: Model , Content {
     @Parent(key: "user_id")
     var user: User
 
-    init(){}
+    init(){
+        // Intentionally unimplemented...
+    }
 
 
 

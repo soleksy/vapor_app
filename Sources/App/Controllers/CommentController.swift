@@ -1,12 +1,14 @@
 import Vapor
 import Fluent
 
-struct CommentList: Content {
-    let CommentList: [Comment]
+let commentRedirect = "/comments"
+
+struct commentList: Content {
+    let commentList: [Comment]
 }
 
 
-struct UpdateComment: Content {
+struct updateComment: Content {
     let id: UUID?
     let body: String
 }
@@ -33,7 +35,7 @@ struct CommentController: RouteCollection {
     func get_all_comments(req: Request) throws -> EventLoopFuture<View> {
         let comments = Comment.query(on: req.db).all()
         return comments.flatMap { list in 
-            let data = CommentList(CommentList: list)
+            let data = commentList(commentList: list)
             return req.view.render("comments" , data)
         }
     }
@@ -53,19 +55,19 @@ struct CommentController: RouteCollection {
     func create(req: Request) throws -> EventLoopFuture<Response> {
         let comment = try req.content.decode(Comment.self)
         return comment.create(on: req.db).map { _ in 
-            return req.redirect(to: "/comments")
+            return req.redirect(to: commentRedirect)
         }
     }
 
 
     func update(req: Request) throws -> EventLoopFuture<Response> {
-        let comment = try req.content.decode(UpdateComment.self)
+        let comment = try req.content.decode(updateComment.self)
         return Comment.find(comment.id, on: req.db)
         .unwrap(or: Abort(.notFound))
         .flatMap{
             $0.body = comment.body
             return $0.update(on: req.db).map { _ in 
-                return req.redirect(to: "/comments")
+                return req.redirect(to: commentRedirect)
                 }
         }
     }
@@ -75,7 +77,7 @@ struct CommentController: RouteCollection {
         .unwrap(or: Abort(.notFound))
         .flatMap{
             $0.delete(on: req.db).map {_ in 
-                return req.redirect(to: "/comments")
+                return req.redirect(to: commentRedirect)
             }
         }
     }

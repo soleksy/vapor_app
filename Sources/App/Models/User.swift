@@ -19,7 +19,9 @@ final class User: Model , Content {
     @Children(for: \.$user)
     var comments: [Comment]
 
-    init(){}
+    init(){
+        // Intentionally unimplemented...
+    }
 
 
     init(id: UUID? = nil, name: String){
